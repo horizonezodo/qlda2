@@ -1,6 +1,5 @@
 <div class="body" >
-    <div class="login-container" id="login-container" ng-class="{'
-    e': ctrl.isSignUp}">
+    <div class="login-container" id="login-container" ng-class="{'right-panel-active': ctrl.isSignUp}">
         <div class="login-form-container sign-up-container" ng-show="ctrl.isSignUp">
             <form class="login-form" ng-submit="ctrl.registerUser()" name="registerForm">
                 <h1 class="login-h1">Create Account</h1>

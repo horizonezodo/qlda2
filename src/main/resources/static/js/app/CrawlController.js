@@ -11,7 +11,7 @@ angular.module('app').factory('CrawlService', ['$http', '$q',function ($http,$q)
             'Content-Type': 'application/json',
             'Authorization': 'Bearer ' + localStorage.getItem('accessToken')
         }
-        $http.post('http://localhost:8080/app/crawl', crawl, {headers:headers})
+        $http.post('http://192.168.113.231:8080/app/crawl', crawl, {headers:headers})
             .then(
                 function (res){
                     console.log('crawl success')
@@ -62,10 +62,41 @@ angular.module('app').factory('CrawlService', ['$http', '$q',function ($http,$q)
     self.currentImage = '';
     self.colorNull = false;
     self.sizeNull = false;
+    self.showImgBtn = false;
+    self.showImgData = false;
 
     self.crawlData = crawlData
 
     function crawlData(crawl){
+
+        self.ImageList=[];
+        self.ImageDetailList = [];
+        self.currentPriceList=[];
+        self.originalPriceList=[];
+        self.colorList=[];
+        self.sizeList=[];
+        self.mapList=[];
+        self.detailList=[];
+        self.title='';
+        self.priceLabel='';
+        self.colorLabel='';
+        self.sizeLable='';
+        self.detailLabel='';
+        self.showVideo = false;
+        self.videoLabel='';
+        self.videoUrl ='';
+        self.imageDetailLabel='';
+        self.productUrl='';
+        self.offterId='';
+        self.imageDetailList=[];
+        self.imagePerPage = 4;
+        self.currentPage = 0;
+        self.currentImages=[];
+        self.currentImage = '';
+        self.colorNull = false;
+        self.sizeNull = false;
+        self.showImgBtn = false;
+        self.showImgData = false;
 
         const cookieData = encodeURIComponent(self.cookieValue);
         self.crawl.cookieData = cookieData
@@ -82,7 +113,17 @@ angular.module('app').factory('CrawlService', ['$http', '$q',function ($http,$q)
                          self.colorNull = true;
                          self.colorList = res.productColorAndSize.productColor.colors || [];
                          self.colorLabel=res.productColorAndSize.productColor.name;
+                         if(res.productColorAndSize.productColor.colors.imageUrl !== "" || res.productColorAndSize.productColor.colors.imageUrl !== null || res.productColorAndSize.productColor.colors.imageUrl !== undefined){
+                             console.log("Đã chạy vào check image")
+                             self.showImgBtn = true;
+                             self.showImgData = true;
+                         }else{
+                             console.log("ko chạy vào check image")
+                             self.showImgBtn = false;
+                             self.showImgData = false;
+                         }
                      }
+
                     if(res.productColorAndSize.productSize && res.productColorAndSize.productSize.size && res.productColorAndSize.productSize.size.length > 0){
                         console.log('size size > 0')
                         self.sizeNull=true
@@ -104,6 +145,16 @@ angular.module('app').factory('CrawlService', ['$http', '$q',function ($http,$q)
                     self.productUrl=res.link;
                     self.offterId=res.offerId;
                     self.currentImage = self.ImageList[0];
+                    const [colorName1,sizeName1 ] = self.mapList[0].name.split('&gt;');
+                    let nameFoundInColorList = self.colorList.some(item => item.name === colorName1);
+                    let nameFoundInSizeList = self.sizeList.some(item => item.name === colorName1);
+                    if(nameFoundInColorList && !nameFoundInSizeList){
+                        // console.log("có chạy vào đây")
+                        self.showImgBtn = false;
+                    }else if(nameFoundInSizeList && !nameFoundInColorList){
+                        // console.log("cũng chạy vào đây")
+                        self.showImgBtn = true;
+                    }
                     self.updateCurrentImage();
                     self.processShowData();
                     self.isShow=true;
@@ -204,33 +255,63 @@ angular.module('app').factory('CrawlService', ['$http', '$q',function ($http,$q)
             self.selectColor = function (color){
                 self.showDataList = [];
                 console.log('call select color')
-                self.sizeList.forEach(item1 =>{
-                    self.mapList.forEach(item2 =>{
-                        const [colorName,sizeName] = item2.name.split('&gt;');
-                        // console.log(colorName + " " + sizeName)
-                        // console.log(colorName + " color name button " + color + "size name : " + sizeName + item1)
-                        if(color.trim() === colorName.trim() && item1.trim() === sizeName){
-                            let newData = {
-                                imgUrl: '',
-                                name: item1,
-                                canBookCount: item2.canBookCount,
-                                saleCount: item2.canBookCount === 0 ? "缺货" : item2.saleCount,
-                                price: item2.discountPrice !== null && item2.discountPrice !== undefined && item2.discountPrice !== '0.00' && item2.discountPrice
-                                    ? item2.discountPrice
-                                    : (item2.currentPrice !== null && item2.currentPrice !== undefined && item2.currentPrice !== '0.00' && item2.currentPrice
-                                        ? item2.currentPrice
-                                        : maxPrice)
-                            };
-                            self.showDataList.push(newData);
-                        }
-                    }
-                    )
-                })
+                if(!self.showImgBtn){
+                    console.log("có show img ");
+                    self.sizeList.forEach(item1 =>{
+                        self.mapList.forEach(item2 =>{
+                                const [colorName,sizeName] = item2.name.split('&gt;');
+                            // console.log("name of btn: " + color + " || color name sau khi phân tách: " + colorName + " || color Name của be gửi: " + item1.name + " || name sau khi phan tách: " + sizeName);
+                                if(color.trim() === colorName.trim() && item1.trim() === sizeName){
+                                    let newData = {
+                                        imgUrl: '',
+                                        name: item1,
+                                        canBookCount: item2.canBookCount,
+                                        saleCount: item2.canBookCount === 0 ? "缺货" : item2.saleCount,
+                                        price: item2.discountPrice !== null && item2.discountPrice !== undefined && item2.discountPrice !== '0.00' && item2.discountPrice
+                                            ? item2.discountPrice
+                                            : (item2.currentPrice !== null && item2.currentPrice !== undefined && item2.currentPrice !== '0.00' && item2.currentPrice
+                                                ? item2.currentPrice
+                                                : maxPrice)
+                                    };
+                                    self.showDataList.push(newData);
+                                }
+                            }
+                        )
+                    })
+                }else{
+                    console.log("color thu được ",color);
+                    console.log("không show img");
+                    self.colorList.forEach(item1 =>{
+                        self.mapList.forEach(item2 =>{
+                                const [colorName,sizeName] = item2.name.split('&gt;');
+                                // console.log("name of btn: " + color + " || color name sau khi phân tách: " + colorName + " || color Name của be gửi: " + item1.name + " || name sau khi phan tách: " + sizeName);
+                                if(color.trim() === colorName.trim() && item1.name.trim() === sizeName){
+                                    let newData = {
+                                        imgUrl: '',
+                                        name: item1.name,
+                                        canBookCount: item2.canBookCount,
+                                        saleCount: item2.canBookCount === 0 ? "缺货" : item2.saleCount,
+                                        price: item2.discountPrice !== null && item2.discountPrice !== undefined && item2.discountPrice !== '0.00' && item2.discountPrice
+                                            ? item2.discountPrice
+                                            : (item2.currentPrice !== null && item2.currentPrice !== undefined && item2.currentPrice !== '0.00' && item2.currentPrice
+                                                ? item2.currentPrice
+                                                : maxPrice)
+                                    };
+                                    self.showDataList.push(newData);
+                                }
+                            }
+                        )
+                    })
+                }
                 return self.showDataList;
             }
             console.log("List data show");
             console.log(self.showDataList);
-            self.selectColor(self.colorList[0].name);
+            if(!self.showImgBtn){
+                self.selectColor(self.colorList[0].name);
+            }else{
+                self.selectColor(self.sizeList[0]);
+            }
         }
 
     //    Nếu không có cả color and size
@@ -255,7 +336,10 @@ angular.module('app').factory('CrawlService', ['$http', '$q',function ($http,$q)
             $scope.$apply();
         }
     }
-//    End hiển thị bảng size
+
+//    Trường hợp đặc biệt : Điện thoại đổi vị trí của size và color
+
+
      self.processShowData();
 
 

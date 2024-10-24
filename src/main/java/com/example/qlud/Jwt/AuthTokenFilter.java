@@ -120,6 +120,7 @@
 
 package com.example.qlud.Jwt;
 
+import com.example.qlud.model.CustomLog;
 import com.example.qlud.service.UserDetailServiceImpl;
 import io.jsonwebtoken.JwtException;
 import org.slf4j.Logger;
@@ -143,6 +144,11 @@ public class AuthTokenFilter extends OncePerRequestFilter {
 
     @Autowired
     JwtUntil until;
+
+    @Autowired
+    CustomLog logs;
+
+    private static final Logger logger2 = LoggerFactory.getLogger(CustomLog.class);
 
     @Autowired
     UserDetailServiceImpl userDetailService;

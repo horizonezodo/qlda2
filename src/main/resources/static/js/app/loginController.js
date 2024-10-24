@@ -10,7 +10,7 @@ factory('loginService', ['$http', '$q',function ($http,$q){
         console.log('Login User')
         console.log(login)
         const deferred = $q.defer();
-        $http.post('http://localhost:8080/auth/login', login)
+        $http.post('http://192.168.113.231:8080/auth/login', login)
             .then(
                 function (res){
                     console.log('Login success');
@@ -29,7 +29,7 @@ factory('loginService', ['$http', '$q',function ($http,$q){
         console.log('register user')
         console.log(register)
         const deferrer = $q.defer();
-        $http.post('http://localhost:8080/auth/register', register)
+        $http.post('http://192.168.113.231:8080/auth/register', register)
             .then(
                 function (res){
                     console.log('register success')
@@ -45,7 +45,7 @@ factory('loginService', ['$http', '$q',function ($http,$q){
 
     return factory;
 }]).
-controller('loginController', ['loginService','dialogService','$scope','$window','$http','$state',function(loginService,dialogService,$scope,$window,$http,$state) {
+controller('loginController', ['loginService','dialogService','$scope','$window','$http','$state','$rootScope',function(loginService,dialogService,$scope,$window,$http,$state,$rootScope) {
     const self = this;
 
     const reCAPTCHA = document.createElement('script');
@@ -99,6 +99,7 @@ controller('loginController', ['loginService','dialogService','$scope','$window'
                 localStorage.setItem("accessToken", response.accessToken);
                 localStorage.setItem("refreshToken", response.refreshToken);
                 localStorage.setItem("username", response.userName);
+                $rootScope.$broadcast('userLoggedIn');
                 if(localStorage.getItem("path")){
                     window.location.href=localStorage.getItem("path");
                     localStorage.removeItem("path");
@@ -141,11 +142,11 @@ controller('loginController', ['loginService','dialogService','$scope','$window'
     }
 
 
-    self.clientId = '224739075686-qvfc83ndvm4asm1ab0kdtrt0fv2bqpb6.apps.googleusercontent.com';
+    self.clientId = '224739075686-l7flm7piipgsb6vb67b42kq23hhqp07o.apps.googleusercontent.com';
     window.onGoogleLoginSuccess = function (response){
         const token = response.credential
 
-        angular.element(document.body).injector().get('$http').post('http://localhost:8080/auth/oauth-2-success', {token: token})
+        angular.element(document.body).injector().get('$http').post('http://http://192.168.113.231:8080/auth/oauth-2-success', {token: token})
             .then(function (response){
                 console.log("Success: ", response.data);
                 localStorage.setItem('accessToken', response.data.accessToken);

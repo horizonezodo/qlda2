@@ -33,13 +33,18 @@
                     </div>
                 </div>
                 <div class="color"  ng-if="ctrl.colorNull && ctrl.sizeNull">
-                    <p class="color-label">{{ctrl.colorLabel}}</p>
-                    <div class="color-data">
-                        <button ng-repeat="color in ctrl.colorList" ng-click="ctrl.selectColor(color.name)" class="color-btn"><img ng-src="{{color.imageUrl + '_50x50.jpg'}}"><span class="color-name">{{color.name}}</span></button>
+                    <div ng-if = "!ctrl.showImgBtn" class="color-data">
+                        <p class="color-label">{{ctrl.colorLabel}}</p>
+                        <button ng-repeat="color in ctrl.colorList" ng-click="ctrl.selectColor(color.name)" class="color-btn"><img ng-if="ctrl.showImgData" ng-src="{{color.imageUrl + '_50x50.jpg'}}"><span class="color-name">{{color.name}}</span></button>
+                    </div>
+                    <div ng-if = "ctrl.showImgBtn" class="color-data">
+                        <p class="color-label">{{ctrl.sizeLable}}</p>
+                        <button ng-repeat="item in ctrl.sizeList" ng-click="ctrl.selectColor(item)" class="color-btn"><span class="color-name">{{item}}</span></button>
                     </div>
                 </div>
                 <div class="size">
-                    <span ng-if="ctrl.colorNull && ctrl.sizeNull" class="size-label">{{ctrl.sizeLable}}</span>
+                    <span ng-if="ctrl.colorNull && ctrl.sizeNull && !ctrl.showImgBtn" class="size-label">{{ctrl.sizeLable}}</span>
+                    <span ng-if="ctrl.colorNull && ctrl.sizeNull && ctrl.showImgBtn" class="size-label">{{ctrl.colorLabel}}</span>
                     <span ng-if="ctrl.colorNull && !ctrl.sizeNull" class="size-label">{{ctrl.colorLabel}}</span>
                     <span ng-if="!ctrl.colorNull && ctrl.sizeNull" class="size-label">{{ctrl.sizeLable}}</span>
                     <span ng-if="!ctrl.colorNull && !ctrl.sizeNull" class="size-label">采购量</span>

@@ -112,7 +112,7 @@
                     <div class="navbar-nav mr-auto py-0">
                         <a ng-click="goHome()" class="nav-item nav-link">Home</a>
                         <a ng-click="goCrawl()" class="nav-item nav-link">Crawl</a>
-                        <a ng-click="goCrawlData()" class="nav-item nav-link active">Crawl Data</a>
+                        <a ng-click="goCrawlData()" class="nav-item nav-link">Crawl Data</a>
                         <div class="nav-item dropdown">
                             <a href="#" class="nav-link dropdown-toggle" data-toggle="dropdown">Pages <i class="fa fa-angle-down mt-1"></i></a>
                             <div class="dropdown-menu bg-primary rounded-0 border-0 m-0">

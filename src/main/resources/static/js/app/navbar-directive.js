@@ -2,7 +2,7 @@ app.directive('navbar', function() {
     return {
         restrict: 'E',
         templateUrl: 'partials/navbar',
-        controller: function ($scope,$http,$location,$state){
+        controller: function ($scope,$http,$location,$state,$rootScope){
             $scope.username= null;
             $scope.checkUserLogin = function (){
                 const username = localStorage.getItem('username');
@@ -13,6 +13,10 @@ app.directive('navbar', function() {
                 }
                 $scope.label = $scope.username ? $scope.username : 'My Account';
             };
+
+            $rootScope.$on('userLoggedIn', function() {
+                $scope.checkUserLogin();  // Gọi lại hàm checkUserLogin sau khi đăng nhập thành công
+            });
 
             $scope.login = function (){
                 $state.go('login');
@@ -26,13 +30,14 @@ app.directive('navbar', function() {
                         'Authorization': 'Bearer ' + localStorage.getItem('accessToken')
                 }
 
-                $http.post('http://localhost:8080/auth/logout',{},{headers:headers})
+                $http.post('http://192.168.113.231:8080/auth/logout',{},{headers:headers})
                     .then(
                         function (res){
                             console.log("logout response: " + res);
                             localStorage.removeItem("accessToken");
                             localStorage.removeItem("refreshToken");
                             localStorage.removeItem("username");
+                            $scope.checkUserLogin();
                             $state.go('login');
                         },
                         function (err){
@@ -67,7 +72,7 @@ app.directive('navbar', function() {
                     $state.go('log-data');
                 }else{
                     localStorage.setItem("path", "/#!/log-data")
-                    $state.go('lgoin');
+                    $state.go('login');
                 }
             }
 

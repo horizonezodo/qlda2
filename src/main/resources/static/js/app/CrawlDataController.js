@@ -13,7 +13,7 @@ angular.module('app').factory('CrawlDataService', ['$http', '$q',function ($http
             'Content-Type': 'application/json',
             'Authorization': 'Bearer ' + localStorage.getItem('accessToken')
         }
-        $http.get('http://localhost:8080/app/crawl-data',{headers:headers})
+        $http.get('http://192.168.113.231:8080/app/crawl-data',{headers:headers})
             .then(
                 function (res){
                     console.log('Get all Data');
@@ -36,7 +36,7 @@ angular.module('app').factory('CrawlDataService', ['$http', '$q',function ($http
             'Content-Type': 'application/json',
             'Authorization': 'Bearer ' + localStorage.getItem('accessToken')
         }
-        $http.post('http://localhost:8080/app/search?key=' + keyvalue,{},{headers:headers})
+        $http.post('http://192.168.113.231:8080/app/search?key=' + keyvalue,{},{headers:headers})
             .then(
                 function (res){
                     console.log("search success");
@@ -78,7 +78,9 @@ angular.module('app').factory('CrawlDataService', ['$http', '$q',function ($http
                         pTitle : res.productTitle,
                         pLink : res.link,
                         pImg: res.imageProductList[0],
-                        pPrice: res.productPrices.currentPrice.map(item => `${item.price} for ${item.priceAmount}`).join(', '),
+                        pPrice: res.productPrices?.currentPrice?.length > 0
+                            ? res.productPrices.currentPrice.map(item => `${item.price} for ${item.priceAmount}`).join(', ')
+                            : '',
                         pColor: res.productColorAndSize?.productColor?.colors?.length > 0
                             ? res.productColorAndSize.productColor.colors.map(item => item.name).join(', ')
                             : '',
@@ -111,7 +113,9 @@ angular.module('app').factory('CrawlDataService', ['$http', '$q',function ($http
                         pTitle : res.productTitle,
                         pLink : res.link,
                         pImg: res.imageProductList[0],
-                        pPrice: res.productPrices.currentPrice.map(item => `${item.price} for ${item.priceAmount}`).join(', '),
+                        pPrice: res.productPrices?.currentPrice?.length > 0
+                            ? res.productPrices.currentPrice.map(item => `${item.price} for ${item.priceAmount}`).join(', ')
+                            : '',
                         pColor: res.productColorAndSize?.productColor?.colors?.length > 0
                             ? res.productColorAndSize.productColor.colors.map(item => item.name).join(', ')
                             : '',

@@ -1,9 +1,11 @@
 package com.example.qlud.control;
 
-import com.example.qlud.model.LogData;
-import com.example.qlud.repo.LogDataRepo;
+import com.example.qlud.model.CustomLog;
+import com.example.qlud.model.Log;
+import com.example.qlud.repo.LogRepo;
 import com.example.qlud.response.MessageResponse;
-import lombok.extern.java.Log;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -13,19 +15,20 @@ import java.util.Optional;
 
 @RestController
 @RequestMapping("/app")
+@CrossOrigin(origins = "*", maxAge = 3600)
 public class LogController {
 
     @Autowired
-    private LogDataRepo repo;
+    private LogRepo repo;
 
     @GetMapping("/all-log")
     public ResponseEntity<?> getAllLog(){
-        return new ResponseEntity<>(repo.findAll(), HttpStatus.OK);
+        return new ResponseEntity<>(repo.findAllCustom(), HttpStatus.OK);
     }
 
     @GetMapping("/log/{id}")
     public ResponseEntity<?> getLogById(@PathVariable("id")String id){
-        Optional<LogData> opt = repo.findById(id);
+        Optional<Log> opt = repo.findById(id);
         if(opt.isPresent()){
             return new ResponseEntity<>(opt.get(), HttpStatus.OK);
         }else{

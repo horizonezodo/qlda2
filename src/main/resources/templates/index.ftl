@@ -39,6 +39,7 @@
     <script src="/js/app/LogDataController.js"></script>
     <script src="/js/app/Log2Controller.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+    <script src="https://accounts.google.com/gsi/client" async defer></script>
 </head>
 <body>
 <navbar></navbar>

@@ -11,10 +11,10 @@ angular.module('app')
                 'Content-Type': 'application/json',
                 'Authorization': 'Bearer ' + localStorage.getItem('accessToken')
             }
-            $http.get('http://localhost:8080/app/log/'+logId,{headers:headers})
+            $http.get('http://192.168.113.231:8080/app/log/'+logId,{headers:headers})
                 .then(
                     function (res){
-                        console.log('Get all Data');
+                        console.log('Get Data');
                         console.log(res.data)
                         deferred.resolve(res.data)
                     },
@@ -42,8 +42,7 @@ angular.module('app')
         response:{},
         statusCode:0,
         startTime:'',
-        endTIme:'',
-        duration:0
+        message:'',
     };
     console.log(logId);
     getLog(logId);
@@ -55,17 +54,33 @@ angular.module('app')
                 self.logData.id = response.id;
                 self.logData.url = response.url;
                 self.logData.method = response.method;
-                self.logData.request = JSON.parse(response.request);
-                self.logData.response = JSON.parse(response.response);
+                if(isValidJson(response.request)){
+                    self.logData.request = JSON.parse(response.request);
+                }else{
+                    self.logData.request = response.request;
+                }
+                if(isValidJson(response.response)){
+                    self.logData.response = JSON.parse(response.response);
+                }else{
+                    self.logData.response = response.response;
+                }
                 self.logData.statusCode = response.status;
                 self.logData.startTime = response.startTime;
-                self.logData.endTIme = response.endTime;
-                self.logData.duration = response.duration;
+                self.logData.message = response.message;
             }
             ,function (err){
                 dialogService.showErrorDialog("Error", err.message);
             }
         )
+    }
+
+    function isValidJson(str){
+        try{
+            JSON.parse(str);
+        }catch (e){
+            return false;
+        }
+        return true;
     }
 
 

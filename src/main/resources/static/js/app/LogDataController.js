@@ -2,8 +2,29 @@
 angular.module('app').factory('LogDataService', ['$http', '$q',function ($http,$q){
     const factory={
         getAllData:getAllData,
+        getAllData2: getAllData2,
         searchData:searchData,
     };
+
+    function getAllData2(){
+        const deferred = $q.defer();
+        const headers = {
+            'Content-Type': 'application/json',
+            'Authorization': 'Bearer ' + localStorage.getItem('accessToken')
+        }
+
+        $http.get('http://192.168.113.231:8080/app/all-log',{headers:headers})
+            .then(
+                function (res){
+                    console.log("Get all data: ", res.data);
+                    deferred.resolve(res.data);
+                }, function (err){
+                    console.log("Error", err);
+                    deferred.reject(err.message);
+                }
+            );
+        return deferred.promise;
+    }
 
     function getAllData(){
         const deferred = $q.defer();
@@ -11,9 +32,10 @@ angular.module('app').factory('LogDataService', ['$http', '$q',function ($http,$
             'Content-Type': 'application/json',
             'Authorization': 'Bearer ' + localStorage.getItem('accessToken')
         }
-        $http.get('http://localhost:8080/app/all-log',{headers:headers})
+        $http.get('http://192.168.113.231:8080/app/all-log',{headers:headers})
             .then(
                 function (res){
+                    console.log('Get data: ', res);
                     console.log('Get all Data');
                     deferred.resolve(res.data)
                 },
@@ -31,7 +53,7 @@ angular.module('app').factory('LogDataService', ['$http', '$q',function ($http,$
             'Content-Type': 'application/json',
             'Authorization': 'Bearer ' + localStorage.getItem('accessToken')
         }
-        $http.post('http://localhost:8080/app/search-log?key=' + keyvalue,{},{headers:headers})
+        $http.post('http://192.168.113.231:8080/app/search-log?key=' + keyvalue,{},{headers:headers})
             .then(
                 function (res){
                     console.log("search success");
@@ -59,9 +81,10 @@ angular.module('app').factory('LogDataService', ['$http', '$q',function ($http,$
         loadAllData();
 
         function loadAllData(){
-            LogDataService.getAllData().then(
+            self.logDatas = [];
+            LogDataService.getAllData2().then(
                 function (response){
-                    self.logDatas = [];
+                    console.log("data controller thu duoc : ",response);
                     self.logDatas = response;}
                 ,function (err){
                     dialogService.showErrorDialog("Error", err.message);

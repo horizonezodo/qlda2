@@ -1,7 +1,7 @@
 <div class="cralw-data-container">
     <div class="search-container">
         <form name="search-log-form" class="search-data-form" ng-submit="ctrl.submit()">
-            <input type="text" class="searchInput" ng-model="ctrl.key"  placeholder="Enter product key">
+            <input type="text" class="searchInput" ng-model="ctrl.key"  placeholder="Enter search key">
             <button type="submit" class="search-data-btn">Search</button>
         </form>
     </div>
@@ -12,17 +12,17 @@
         <div>
             Url
         </div>
-        <div>
-           Request
-        </div>
-        <div>
-            Response
-        </div>
+<#--        <div>-->
+<#--           Request-->
+<#--        </div>-->
+<#--        <div>-->
+<#--            Response-->
+<#--        </div>-->
         <div>
             Start Time
         </div>
         <div>
-            End Time
+            Message
         </div>
         <div>
             Action
@@ -32,20 +32,20 @@
         <div style="display: none">
             <span class="id">{{item.id}}</span>
         </div>
-        <div>
-            <span class="url">{{item.url}}</span>
-        </div>
         <div class="color-crawl-data">
-            <span class="pColor">{{item.request}}</span>
+            <span class="pColor">{{item.url}}</span>
         </div>
-        <div class="color-crawl-data">
-            <span class="pColor">{{item.response}}</span>
-        </div>
+<#--        <div class="color-crawl-data">-->
+<#--            <span class="pColor">{{item.request}}</span>-->
+<#--        </div>-->
+<#--        <div class="color-crawl-data">-->
+<#--            <span class="pColor">{{item.response}}</span>-->
+<#--        </div>-->
         <div class="size-crawl-data">
             <span class="pSize">{{item.startTime}}</span>
         </div>
         <div class="size-crawl-data">
-            <span class="pSize">{{item.endTime}}</span>
+            <span class="pSize">{{item.message}}</span>
         </div>
         <div>
             <button type="button" ng-click="ctrl.viewDetail(item.id)" class="btn btn-primary custom-width">View Detail</button>

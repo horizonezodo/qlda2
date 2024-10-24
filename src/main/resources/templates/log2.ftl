@@ -14,12 +14,12 @@
         </div>
         <div>
             <span>Request: </span>
-<#--            <span>{{ctrl.logData.request}}</span>-->
+<#--            <span>{{ctrl.log.request}}</span>-->
             <pre ng-bind="ctrl.logData.request | json"></pre>
         </div>
         <div>
             <span>Response: </span>
-<#--            <span>{{ctrl.logData.response}}</span>-->
+<#--            <span>{{ctrl.log.response}}</span>-->
             <pre ng-bind="ctrl.logData.response | json"></pre>
         </div>
         <div>
@@ -31,12 +31,8 @@
             <span>{{ctrl.logData.startTime}}</span>
         </div>
         <div>
-            <span>End Time: </span>
-            <span>{{ctrl.logData.endTime}}</span>
-        </div>
-        <div>
-            <span>Time Using: </span>
-            <span>{{ctrl.logData.duration}} Ms</span>
+            <span>Message:</span>
+            <span>{{ctrl.logData.message}}</span>
         </div>
     </div>
     <div>
